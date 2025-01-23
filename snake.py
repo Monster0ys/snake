@@ -13,20 +13,29 @@ clock=pygame.time.Clock()
 x = W // 2
 y = H // 2
 speed=1
+direction ="RIGHT"
 
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             exit()
-    keys = pygame.key.get_pressed()
-        
-    if keys[pygame.K_LEFT]:
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT and direction != "RIGHT":
+                direction="LEFT"
+            elif event.key == pygame.K_RIGHT and direction != "LEFT":
+                direction="RIGHT"
+            elif event.key == pygame.K_UP and direction != "DOWN":
+                direction="UP"
+            elif event.key == pygame.K_DOWN and direction != "UP":
+                direction="DOWN"
+
+    if direction == "LEFT":
         x=(x-speed+W)%W
-    elif keys[pygame.K_RIGHT]:
+    elif direction =="RIGHT":
         x=(x+speed+W)%W
-    elif keys[pygame.K_UP]:
+    elif direction =="UP":
         y=(y-speed+H)%H
-    elif keys[pygame.K_DOWN]:
+    elif direction =="DOWN":
         y=(y+speed+H)%H
 
     sc.fill(WHITE)
