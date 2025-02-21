@@ -12,6 +12,7 @@ W = 500
 H = 500
 FPS=60
 W_SNAKE=4
+snake_must_grow=40
 
 WHITE=(255, 255, 255)
 BLUE=(0,0,255)
@@ -34,10 +35,10 @@ class Snake_stick():
     def get_pos(self,n):
         return [self.x+W_SNAKE*int(self.horizontal)*n, self.y+W_SNAKE*int(not self.horizontal)*n]
                                   
-lines:list[Snake_stick]=[Snake_stick(W//2-i, H//2, False) for i in range(50)]
+lines:list[Snake_stick]=[Snake_stick(W//2-i, H//2, False) for i in range(10)]
 
 direction =[RIGHT]
-food=pygame.Rect(20,20,9,9)
+food=pygame.Rect(random.randint(0,W-(W_SNAKE*2+1)),random.randint(0,H-(W_SNAKE*2+1)),W_SNAKE*2+1,W_SNAKE*2+1)
 direction_changes = [None for _ in range(W_SNAKE*2)]
 
 while True:
@@ -64,11 +65,15 @@ while True:
         direction_changes.insert(0, None)
     direction_changes.pop()
     lines.insert(0,Snake_stick((lines[0].x+direction[0][0]+W)%W,(lines[0].y+direction[0][1]+H)%H, direction[0][0]==0))
-    lines[-1].draw(WHITE)
-    lines.pop()
     if food.clipline(lines[0].get_pos(-1),lines[0].get_pos(1)):
         pygame.draw.rect(sc, WHITE, food)
         food=pygame.Rect(random.randint(0,W-(W_SNAKE*2+1)),random.randint(0,H-(W_SNAKE*2+1)),W_SNAKE*2+1,W_SNAKE*2+1)
+        snake_must_grow=9
+    if snake_must_grow>0:
+        snake_must_grow-=1
+    else:
+        lines[-1].draw(WHITE)
+        lines.pop()
     pygame.draw.rect(sc, RED, food)
     for line in lines:
         line.draw(BLUE)
